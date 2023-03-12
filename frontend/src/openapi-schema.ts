@@ -58,6 +58,12 @@ export interface components {
       username: string;
       password: string;
     };
+    UnauthenticatedError: {
+      detail: string;
+    };
+    ForbiddenError: {
+      detail: string;
+    };
     Task: {
       /** Format: uuid */
       id?: string;
@@ -70,6 +76,13 @@ export interface components {
       assigned_worker?: string | null;
       /** Format: date-time */
       last_keepalive?: string;
+    };
+    ValidationError: {
+      errors: Record<string, never>;
+      non_field_errors: (string)[];
+    };
+    NotFoundError: {
+      detail: string;
     };
     Token: {
       token: string;
@@ -187,6 +200,16 @@ export interface operations {
           "application/json": components["schemas"]["UserCreate"];
         };
       };
+      401: {
+        content: {
+          "application/json": components["schemas"]["UnauthenticatedError"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["ForbiddenError"];
+        };
+      };
     };
   };
   listTasks: {
@@ -242,6 +265,26 @@ export interface operations {
           "application/json": components["schemas"]["UserCreate"];
         };
       };
+      400: {
+        content: {
+          "application/json": components["schemas"]["ValidationError"];
+        };
+      };
+      401: {
+        content: {
+          "application/json": components["schemas"]["UnauthenticatedError"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["ForbiddenError"];
+        };
+      };
+      404: {
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
     };
   };
   loginUserCreate: {
@@ -256,6 +299,26 @@ export interface operations {
       201: {
         content: {
           "application/json": components["schemas"]["Token"];
+        };
+      };
+      400: {
+        content: {
+          "application/json": components["schemas"]["ValidationError"];
+        };
+      };
+      401: {
+        content: {
+          "application/json": components["schemas"]["UnauthenticatedError"];
+        };
+      };
+      403: {
+        content: {
+          "application/json": components["schemas"]["ForbiddenError"];
+        };
+      };
+      404: {
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
         };
       };
     };

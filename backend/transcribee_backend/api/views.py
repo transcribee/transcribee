@@ -10,7 +10,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.schemas.openapi import AutoSchema
 from transcribee_backend.base.models import Document, Task, User
 from transcribee_backend.base.serializers import (
     DocumentSerializer,
@@ -18,6 +17,7 @@ from transcribee_backend.base.serializers import (
     UserSerializer,
 )
 
+from .schema import UserViewSetSchema
 from .serializers import KeepaliveSerializer, UserCreateSerializer
 
 
@@ -30,19 +30,6 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
     serializer_class = DocumentSerializer
     permission_classes = [IsAuthenticated]
-
-
-class UserViewSetSchema(AutoSchema):
-    def get_response_serializer(self, path, method):
-        if (
-            hasattr(self.view, "response_serializer")
-            and self.view.response_serializer is not None
-        ):
-            return self.view.response_serializer(
-                context=self.view.get_serializer_context()
-            )
-
-        return self.get_serializer(path, method)
 
 
 class TokenSerializer(serializers.Serializer):
