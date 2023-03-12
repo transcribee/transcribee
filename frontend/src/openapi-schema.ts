@@ -71,6 +71,9 @@ export interface components {
       /** Format: date-time */
       last_keepalive?: string;
     };
+    Token: {
+      token: string;
+    };
     Keepalive: {
       progress?: number;
     };
@@ -252,7 +255,7 @@ export interface operations {
     responses: {
       201: {
         content: {
-          "application/json": components["schemas"]["UserCreate"];
+          "application/json": components["schemas"]["Token"];
         };
       };
     };
