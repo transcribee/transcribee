@@ -16,7 +16,7 @@ export interface paths {
     patch: operations["partialUpdateDocument"];
   };
   "/api/v1/users/me/": {
-    get: operations["meUserViewSet"];
+    get: operations["meUserCreate"];
   };
   "/api/v1/tasks/": {
     get: operations["listTasks"];
@@ -26,10 +26,10 @@ export interface paths {
     get: operations["retrieveTask"];
   };
   "/api/v1/users/": {
-    post: operations["createUserViewSet"];
+    post: operations["createUserCreate"];
   };
   "/api/v1/users/login/": {
-    post: operations["loginUserViewSet"];
+    post: operations["loginUserCreate"];
   };
   "/api/v1/tasks/claim_unassigned_task/": {
     post: operations["claimUnassignedTaskTask"];
@@ -53,6 +53,10 @@ export interface components {
       created_at?: string;
       /** Format: date-time */
       changed_at?: string;
+    };
+    UserCreate: {
+      username: string;
+      password: string;
     };
     Task: {
       /** Format: uuid */
@@ -173,11 +177,11 @@ export interface operations {
       };
     };
   };
-  meUserViewSet: {
+  meUserCreate: {
     responses: {
       200: {
         content: {
-          "application/json": Record<string, never>;
+          "application/json": components["schemas"]["UserCreate"];
         };
       };
     };
@@ -221,34 +225,34 @@ export interface operations {
       };
     };
   };
-  createUserViewSet: {
+  createUserCreate: {
     requestBody?: {
       content: {
-        "application/json": Record<string, never>;
-        "application/x-www-form-urlencoded": Record<string, never>;
-        "multipart/form-data": Record<string, never>;
+        "application/json": components["schemas"]["UserCreate"];
+        "application/x-www-form-urlencoded": components["schemas"]["UserCreate"];
+        "multipart/form-data": components["schemas"]["UserCreate"];
       };
     };
     responses: {
       201: {
         content: {
-          "application/json": Record<string, never>;
+          "application/json": components["schemas"]["UserCreate"];
         };
       };
     };
   };
-  loginUserViewSet: {
+  loginUserCreate: {
     requestBody?: {
       content: {
-        "application/json": Record<string, never>;
-        "application/x-www-form-urlencoded": Record<string, never>;
-        "multipart/form-data": Record<string, never>;
+        "application/json": components["schemas"]["UserCreate"];
+        "application/x-www-form-urlencoded": components["schemas"]["UserCreate"];
+        "multipart/form-data": components["schemas"]["UserCreate"];
       };
     };
     responses: {
       201: {
         content: {
-          "application/json": Record<string, never>;
+          "application/json": components["schemas"]["UserCreate"];
         };
       };
     };
