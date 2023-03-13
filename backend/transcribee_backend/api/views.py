@@ -18,6 +18,7 @@ from transcribee_backend.base.serializers import (
     UserSerializer,
 )
 
+from .schema import UserViewSetSchema
 from .serializers import KeepaliveSerializer, UserCreateSerializer
 
 
@@ -32,8 +33,15 @@ class DocumentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
-class UserViewSet(viewsets.ViewSet):
+class TokenSerializer(serializers.Serializer):
+    token = serializers.CharField()
+
+
+class UserViewSet(viewsets.GenericViewSet):
     serializer_class = UserCreateSerializer
+    schema = UserViewSetSchema()
+
+    response_serializer = None
 
     def create(self, request, *args, **kwargs):
         serializer = UserCreateSerializer(data=request.data)
@@ -55,7 +63,7 @@ class UserViewSet(viewsets.ViewSet):
         user = self.request.user
         return Response(UserSerializer(instance=user).data)
 
-    @action(detail=False, methods=["post"])
+    @action(detail=False, methods=["post"], response_serializer=TokenSerializer)
     def login(self, request):
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -99,10 +107,11 @@ class TaskViewSet(
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context.setdefault("document_queryset", Document.objects.none())
-        if self.request.user.is_authenticated:
-            context["document_queryset"] = Document.objects.filter(
-                user=self.request.user
-            )
+        if self.request is not None:  # self.request is None during schema generation
+            if self.request.user.is_authenticated:
+                context["document_queryset"] = Document.objects.filter(
+                    user=self.request.user
+                )
         return context
 
     @action(detail=False, methods=["post"], permission_classes=[IsAuthenticatedWorker])
