@@ -27,6 +27,7 @@ specifiers:
   react-json-tree: ^0.18.0
   slate: ^0.91.4
   slate-react: ^0.91.8
+  swr: ^2.1.0
   tailwindcss: ^3.2.7
   typescript: ^4.9.5
   vite: ^4.1.4
@@ -46,6 +47,7 @@ dependencies:
   react-json-tree: 0.18.0_pmekkgnqduwlme35zpnqhenc34
   slate: 0.91.4
   slate-react: 0.91.8_6tgy34rvmll7duwkm4ydcekf3u
+  swr: 2.1.0_react@18.2.0
   tailwindcss: 3.2.7_postcss@8.4.21
   wouter: 2.10.0_react@18.2.0
   yjs: 13.5.48
@@ -2559,6 +2561,16 @@ packages:
   /supports-preserve-symlinks-flag/1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
+
+  /swr/2.1.0_react@18.2.0:
+    resolution: {integrity: sha512-4hYl5p3/KalQ1MORealM79g/DtLohmud6yyfXw5l4wjtFksYUnocRFudvyaoUtgj3FrVNK9lS25Av9dsZYvz0g==}
+    engines: {pnpm: '7'}
+    peerDependencies:
+      react: ^16.11.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
+    dev: false
 
   /tailwindcss/3.2.7_postcss@8.4.21:
     resolution: {integrity: sha512-B6DLqJzc21x7wntlH/GsZwEXTBttVSl1FtCzC8WP4oBc/NKef7kaax5jeihkkCEWc831/5NDJ9gRNDK6NEioQQ==}

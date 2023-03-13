@@ -1,6 +1,6 @@
-import { paths } from './openapi-schema'
-import { Fetcher, Middleware } from 'openapi-typescript-fetch'
-
+import { paths } from './openapi-schema';
+import { ApiResponse, Fetcher, Middleware } from 'openapi-typescript-fetch';
+import useSwr from 'swr';
 
 export function storeAuthToken(token: string | undefined) {
   if (token) {
@@ -11,26 +11,39 @@ export function storeAuthToken(token: string | undefined) {
 }
 
 const authMiddleware: Middleware = async (url, init, next) => {
-  const headers: Headers = new Headers();
+  const headers = new Headers(init.headers);
 
   const authToken = localStorage.getItem('auth');
   if (authToken) {
     headers.set('Authorization', `Token ${authToken}`);
   }
 
+  return next(url, { ...init, headers: headers });
+};
+
+const contentTypeMiddleware: Middleware = async (url, init, next) => {
+  const headers = new Headers(init.headers);
+
   if (typeof init.body == 'string') {
     headers.set('Content-Type', 'application/json');
   }
 
-  const response = await next(url, {...init, headers: headers})
-  return response
-}
+  return next(url, { ...init, headers: headers });
+};
 
-const fetcher = Fetcher.for<paths>()
+export const fetcher = Fetcher.for<paths>();
 fetcher.configure({
-  baseUrl: '/',
-  use: [authMiddleware]
-})
+  baseUrl: '',
+  use: [authMiddleware, contentTypeMiddleware],
+});
 
-
-export const login = fetcher.path('/api/v1/users/login/').method('post').create()
+export function makeSwrHook<P, R>(
+  id: string,
+  fn: (params: P, req?: RequestInit | undefined) => Promise<ApiResponse<R>>,
+) {
+  return (params: P) =>
+    useSwr([id, params], async (_id: string, params: P) => {
+      const response = await fn(params);
+      return response.data;
+    });
+}
